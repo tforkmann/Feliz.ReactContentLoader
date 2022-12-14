@@ -90,18 +90,6 @@ Target.create "RunTests" (fun _ ->
     |> runParallel
 )
 
-
-Target.create
-    "ExecuteTests"
-    (fun _ ->
-        Environment.setEnvironVar "status" "Development"
-
-        run dotnet "build" sharedTestsPath
-
-        [ "server", dotnet "run" serverTestsPath
-          "client", npm "run test:build" "." ]
-        |> runParallel)
-
 Target.create "Format" (fun _ ->
    run dotnet "fantomas . -r" "src"
 )
@@ -219,13 +207,11 @@ let dependencies = [
         ==> "InstallClient"
         // ==> "UpdateTools"
         ==> "Build"
-        ==> "ExecuteTests"
 
     "Clean"
         ==> "InstallClient"
-        ==> "UpdateTools"
+        // ==> "UpdateTools"
         ==> "Build"
-        ==> "ExecuteTests"
         ==> "PrepareRelease"
         ==> "Pack"
         ==> "Push"
@@ -234,7 +220,6 @@ let dependencies = [
         ==> "RunDocs"
 
     "InstallDocs"
-        ==> "ExecuteTests"
         ==> "PublishDocs"
 ]
 

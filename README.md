@@ -1,4 +1,4 @@
-# Feliz Binding for [ReactContentLoader](https://ReactContentLoader.dev/)
+# Feliz Binding for [ReactContentLoader](https://github.com/danilowoz/react-content-loader)
 
 [![Feliz.ReactContentLoader on Nuget](https://buildstats.info/nuget/Feliz.ReactContentLoader)](https://www.nuget.org/packages/Feliz.ReactContentLoader/)
 [![Client](https://github.com/tforkmann/Feliz.ReactContentLoader/actions/workflows/Docs.yml/badge.svg)](https://github.com/tforkmann/Feliz.ReactContentLoader/actions/workflows/Docs.yml)

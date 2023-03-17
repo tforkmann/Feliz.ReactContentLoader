@@ -10,15 +10,15 @@ type ReactContentLoader =
 
     static member inline contentLoader (props: IReactContentLoaderProp seq) =
         Interop.reactApi.createElement (Interop.ReactContentLoader, createObj !!props)
-    static member inline facebook (props: IRectProp seq) =
+    static member inline facebook (props: IReactContentLoaderProp seq) =
         Interop.reactApi.createElement (Interop.Facebook, createObj !!props)
-    static member inline instagram (props: IRectProp seq) =
+    static member inline instagram (props: IReactContentLoaderProp seq) =
         Interop.reactApi.createElement (Interop.Instagram, createObj !!props)
-    static member inline code (props: IRectProp seq) =
+    static member inline code (props: IReactContentLoaderProp seq) =
         Interop.reactApi.createElement (Interop.Code, createObj !!props)
-    static member inline list (props: IRectProp seq) =
+    static member inline list (props: IReactContentLoaderProp seq) =
         Interop.reactApi.createElement (Interop.Instagram, createObj !!props)
-    static member inline bulletList (props: IRectProp seq) =
+    static member inline bulletList (props: IReactContentLoaderProp seq) =
         Interop.reactApi.createElement (Interop.BulletList, createObj !!props)
 
     // Basic Props

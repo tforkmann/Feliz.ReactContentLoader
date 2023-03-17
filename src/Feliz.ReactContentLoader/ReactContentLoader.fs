@@ -47,6 +47,11 @@ type ReactContentLoader =
     static member inline interval(interval : float) : IReactContentLoaderProp =
         Interop.mkReactContentLoaderProp "interval" interval
 
+    static member inline height(height : float) : IReactContentLoaderProp =
+        Interop.mkReactContentLoaderProp "height" height
+
+    static member inline width(width : float) : IReactContentLoaderProp =
+        Interop.mkReactContentLoaderProp "width" width
     static member inline viewBox(viewBox: string) : IReactContentLoaderProp =
         Interop.mkReactContentLoaderProp "viewBox" viewBox
 

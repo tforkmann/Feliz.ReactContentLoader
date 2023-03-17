@@ -6,8 +6,6 @@
   <ItemGroup>
     <Compile Include="Types.fs" />
     <Compile Include="Interop.fs" />
-    <Compile Include="Styles.fs" />
-    <Compile Include="Components.fs" />
     <Compile Include="ReactContentLoader.fs" />
   </ItemGroup>
   <PropertyGroup>

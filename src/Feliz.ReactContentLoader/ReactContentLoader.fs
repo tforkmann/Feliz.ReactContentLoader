@@ -4,17 +4,6 @@ open Fable.Core.JsInterop
 open Fable.Core
 open Feliz
 
-type Event = Browser.Types.Event
-
-[<Erase>]
-type style =
-    static member inline background(background: string) = Interop.mkAttr "background" background
-    static member inline color(color: string) = Interop.mkAttr "color" color
-    static member inline border(border: string) = Interop.mkAttr "border" border
-    static member inline width(width: int) = Interop.mkAttr "width" width
-    static member inline height(heigth: int) = Interop.mkAttr "heigth" heigth
-    static member inline stroke(stroke: string) = Interop.mkAttr "stroke" stroke
-
 [<Erase>]
 type ReactContentLoader =
     /// Creates a new ReactContentLoader component.

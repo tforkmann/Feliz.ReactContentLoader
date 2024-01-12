@@ -12,7 +12,7 @@ dotnet paket add Feliz.ReactContentLoader
 and install the npm package
 
 ```
-npm install --save ReactContentLoader
+npm install --save react-content-loader
 ```
 
 or use Femto:

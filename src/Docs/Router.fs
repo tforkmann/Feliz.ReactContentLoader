@@ -1,21 +1,43 @@
-module Router
+module Docs.Router
 
+open Browser.Types
 open Feliz.Router
+open Fable.Core.JsInterop
 
 type Page =
-    | FelizReactContentLoader
-    | FelizReactContentLoaderInstallation
-    | FelizReactContentLoaderExampleFlow
+    | Install
+    | Use
+    | ReactContentLoader
 
-let defaultPage = FelizReactContentLoader
+[<RequireQualifiedAccess>]
+module Page =
+    let defaultPage = Install
 
-let parseUrl = function
-    | [ "" ] -> FelizReactContentLoader
-    | [ "installation" ] -> FelizReactContentLoaderInstallation
-    | [ "exampleflow" ] -> FelizReactContentLoaderExampleFlow
-    | _ -> defaultPage
+    let parseFromUrlSegments =
+        function
+        | [ "use" ] -> Use
+        | [ "reactcontentloader" ] -> ReactContentLoader
+        | [] -> Install
+        | _ -> defaultPage
 
-let getHref = function
-    | FelizReactContentLoader -> Router.format("")
-    | FelizReactContentLoaderInstallation -> Router.format("installation")
-    | FelizReactContentLoaderExampleFlow -> Router.format("exampleflow")
+    let noQueryString segments : string list * (string * string) list = segments, []
+
+    let toUrlSegments =
+        function
+        | Install -> [] |> noQueryString
+        | ReactContentLoader -> ["reactcontentloader"] |> noQueryString
+        | Use -> [ "use" ] |> noQueryString
+
+[<RequireQualifiedAccess>]
+module Router =
+    let goToUrl (e: MouseEvent) =
+        e.preventDefault ()
+        let href: string = !!e.currentTarget?attributes?href?value
+        Router.navigate href
+
+    let navigatePage (p: Page) =
+        p |> Page.toUrlSegments |> Router.navigate
+
+[<RequireQualifiedAccess>]
+module Cmd =
+    let navigatePage (p: Page) = p |> Page.toUrlSegments |> Cmd.navigate

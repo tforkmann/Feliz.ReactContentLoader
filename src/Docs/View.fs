@@ -1,61 +1,170 @@
-module View
+module Docs.View
 
-open Domain
 open Feliz
-open Feliz.Bulma
 open Router
-open Shared
+open Elmish
+open SharedView
+open Feliz.DaisyUI
+open Feliz.DaisyUI.Operators
 
-let menuPart model dispatch =
-    let item (t: string) p =
-        let isActive =
-            if model.CurrentPage = p then [ helpers.isActive ] else []
+type Msg =
+    | UrlChanged of Page
+    | SetTheme of string
 
-        Bulma.menuItem.a
-            [ yield! isActive
-              prop.onClick (fun _ -> (SentToast t) |> dispatch)
-              prop.text t
-              prop.href (getHref p) ]
+type State = { Page: Page; Theme: string }
 
-    Bulma.menu
-        [ Bulma.menuLabel "Feliz.ReactContentLoader"
-          Bulma.menuList [ item "Overview" FelizReactContentLoader ]
-          Bulma.menuList
-              [ item "Installation" FelizReactContentLoaderInstallation
-                item "Example Flow" FelizReactContentLoaderExampleFlow ] ]
+let init () =
+    let nextPage = Router.currentUrl () |> Page.parseFromUrlSegments
+    { Page = nextPage; Theme = "light" }, Cmd.navigatePage nextPage
 
-let contentPart model dispatch =
-    match model.CurrentPage with
-    | FelizReactContentLoader -> Views.FelizReactContentLoader.overview
-    | FelizReactContentLoaderInstallation -> Views.FelizReactContentLoader.installation
-    | FelizReactContentLoaderExampleFlow -> Views.ExampleFlow.overview
+let update (msg: Msg) (state: State) : State * Cmd<Msg> =
+    match msg with
+    | UrlChanged page -> { state with Page = page }, Cmd.none
+    | SetTheme theme -> { state with Theme = theme }, Cmd.none
+
+let private rightSide state dispatch (title: string) (docLink: string) elm =
 
 
-open Zanaptak.TypedCssClasses
+    Daisy.drawerContent [
+        Daisy.navbar [
+            Daisy.navbarStart [
+                Html.divClassed
+                    "lg:hidden"
+                    [ Daisy.button.label [
+                          button.square
+                          button.ghost
+                          prop.htmlFor "main-menu"
+                          prop.children [
+                              Svg.svg [
+                                  svg.viewBox (0, 0, 24, 24)
+                                  svg.className "inline-block w-6 h-6 stroke-current"
+                                  svg.children [
+                                      Svg.path [
+                                          svg.d "M4 6h16M4 12h16M4 18h16"
+                                          svg.strokeWidth 2
+                                      ]
+                                  ]
+                              ]
+                          ]
+                      ] ]
+            ]
+        ]
 
-type Icon =
-    CssClasses<"https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", Naming.PascalCase>
+        Html.divClassed
+            "px-5 py-5"
+            [ Html.h2 [
+                  color.textPrimary
+                  ++ prop.className "my-6 text-5xl font-bold"
+                  prop.text title
+              ]
 
-type tailwind = CssClasses<"public/css/tailwind-generated.css", Naming.Verbatim>
+              elm ]
+    ]
 
-let view (model: Model) (dispatch: Msg -> unit) =
+let private leftSide (p: Page) =
+    let miBadge (b: string) (t: string) (mp: Page) =
+        Html.li [
+            Html.a [
+                prop.href mp
+                prop.onClick Router.goToUrl
+                if p = mp then
+                    (menuItem.active
+                     ++ prop.className "justify-between")
+                else
+                    prop.className "justify-between"
+                prop.children [
+                    Html.span t
+                    Html.span [
+                        prop.className "badge"
+                        prop.text b
+                    ]
+                ]
+            ]
+        ]
 
-    let render =
-        Html.div
-            [ prop.classes
-                [ tailwind.container
-                  tailwind.``md:flex``
-                  tailwind.``justify-center`` ]
-              prop.children
-                  [ Bulma.section
-                      [ Bulma.tile
-                          [ tile.isAncestor
-                            prop.children
-                                [ Bulma.tile
-                                    [ tile.is2
-                                      prop.children (menuPart model dispatch) ]
-                                  Bulma.tile (contentPart model dispatch) ] ] ] ] ]
+    let mi (t: string) (mp: Page) =
+        Html.li [
+            Html.a [
+                if p = mp then menuItem.active
+                prop.text t
+                prop.href mp
+                prop.onClick Router.goToUrl
+            ]
+        ]
 
-    React.router
-        [ router.onUrlChanged (parseUrl >> UrlChanged >> dispatch)
-          router.children [render] ]
+    Daisy.drawerSide [
+        Daisy.drawerOverlay [
+            prop.htmlFor "main-menu"
+        ]
+        Html.aside [
+            prop.className "flex flex-col border-r w-80 bg-base-100 text-base-content"
+            prop.children [
+                Html.divClassed
+                    "inline-block text-3xl font-title px-5 py-5 font-bold"
+                    [ Html.span [
+                          color.textPrimary
+                          prop.text "Feliz.ReactContentLoader"
+                      ]
+                      Html.a [
+                          prop.href "https://www.nuget.org/packages/Feliz.ReactContentLoader"
+                          prop.children [
+                              Html.img [
+                                  prop.src "https://img.shields.io/nuget/v/Feliz.ReactContentLoader.svg?style=flat-square"
+                              ]
+                          ]
+                      ] ]
+                Daisy.menu [
+                    menu.md
+                    prop.className "flex flex-col p-4 pt-0"
+                    prop.children [
+                        Daisy.menuTitle [ Html.span "Docs" ]
+                        mi "Install" Install
+                        mi "Use" Use
+                        mi "ReactContentLoader" Page.ReactContentLoader
+                        ]
+                ]
+            ]
+        ]
+    ]
+
+let private inLayout state dispatch (title: string) (docLink: string) (p: Page) (elm: ReactElement) =
+    Html.div [
+        prop.className "bg-base-100 text-base-content h-screen"
+        theme.custom state.Theme
+        prop.children [
+            Daisy.drawer [
+                prop.className "lg:drawer-open"
+                prop.children [
+                    Daisy.drawerToggle [
+                        prop.id "main-menu"
+                    ]
+                    rightSide state dispatch title docLink elm
+                    leftSide p
+                ]
+            ]
+        ]
+    ]
+
+
+
+[<ReactComponent>]
+let AppView (state: State) (dispatch: Msg -> unit) =
+
+    let title, docLink, content =
+        match state.Page with
+        | Install -> "Installation", "/docs/install", Pages.Install.InstallView()
+        | Use -> "How to use", "/docs/use", Pages.Use.UseView()
+        | ReactContentLoader -> "ReactContentLoader", "/reactcontentloader", Pages.ReactContentLoaderView.ReactContentLoaderView()
+
+    React.router [
+        router.hashMode
+        router.onUrlChanged (
+            Page.parseFromUrlSegments
+            >> UrlChanged
+            >> dispatch
+        )
+        router.children [
+            content
+            |> inLayout state dispatch title docLink state.Page
+        ]
+    ]

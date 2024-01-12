@@ -4,8 +4,6 @@ open Fake.Core
 open Fake.DotNet
 open Fake.Core.TargetOperators
 open Fake.IO
-open Farmer
-open Farmer.Builders
 open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
 open Fake.Tools
@@ -77,7 +75,7 @@ Target.create
 Target.create "InstallClient" (fun _ -> run npm "install" ".")
 
 Target.create "Run" (fun _ ->
-    [ "client", dotnet "fable watch --run webpack-dev-server" clientPath  ]
+    [  "client", npm "start" "."  ]
       |> runParallel
 
 )
@@ -174,14 +172,10 @@ Target.create "InstallDocs" (fun _ ->
     run npm "install --frozen-lockfile" docsSrcPath
     run dotnet "restore" docsSrcPath )
 
-Target.create "PublishDocs" (fun _ ->
-    [ docsDeployPath] |> Shell.cleanDirs
-    run dotnet "fable --run webpack-cli -p" docsSrcPath
-)
-
+Target.create "PublishDocs" (fun _ -> run npm "run build" ".")
 
 Target.create "RunDocs" (fun _ ->
-    run dotnet "fable watch --run webpack-dev-server --outDir src/Docs/output" docsSrcPath)
+    run npm "run startdocs" ".")
 
 let dependencies = [
 

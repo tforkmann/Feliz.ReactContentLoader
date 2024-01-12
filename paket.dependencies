@@ -4,15 +4,18 @@ storage: none
 
 nuget Fable.Elmish.React
 nuget Fable.Elmish.Debugger
-nuget Feliz.Bulma
+nuget Feliz.DaisyUI
 nuget Feliz.Router
 nuget Fake.Core.Target
 nuget Fake.DotNet.Cli
 nuget Fake.Core.ReleaseNotes
 nuget Fake.Tools.Git
 nuget Fake.Core.UserInput
-nuget Farmer
+nuget Feliz.Markdown
+nuget Feliz.Bulma
+nuget Feliz.UseElmish
 nuget Feliz.ReactContentLoader
+nuget Fable.Elmish.HMR
 
 group Package
     source https://api.nuget.org/v3/index.json

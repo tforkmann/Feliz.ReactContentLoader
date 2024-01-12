@@ -1,4 +1,4 @@
-name: Client
+name: Docs
 
 on:
   workflow_dispatch:

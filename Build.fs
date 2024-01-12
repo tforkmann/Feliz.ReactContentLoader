@@ -10,12 +10,11 @@ open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
 open Fake.Tools
 open Helpers
+
 let execContext = Context.FakeExecutionContext.Create false "build.fsx" [ ]
 Context.setExecutionContext (Context.RuntimeContext.Fake execContext)
 let clientPath = Path.getFullName "src/Client"
 let deployDir = Path.getFullName "deploy"
-let sharedTestsPath = Path.getFullName "tests/Shared"
-let serverTestsPath = Path.getFullName "tests/Server"
 let buildDir  = "./build/"
 
 // --------------------------------------------------------------------------------------
@@ -81,13 +80,6 @@ Target.create "Run" (fun _ ->
     [ "client", dotnet "fable watch --run webpack-dev-server" clientPath  ]
       |> runParallel
 
-)
-
-Target.create "RunTests" (fun _ ->
-    run dotnet "build" sharedTestsPath
-    [ "server", dotnet "watch run" serverTestsPath
-      "client", npm "run test:live" "." ]
-    |> runParallel
 )
 
 Target.create "Format" (fun _ ->
@@ -197,11 +189,6 @@ let dependencies = [
         ==> "InstallClient"
         // ==> "UpdateTools"
         ==> "Run"
-
-    "Clean"
-        ==> "InstallClient"
-        // ==> "UpdateTools"
-        ==> "RunTests"
 
     "Clean"
         ==> "InstallClient"

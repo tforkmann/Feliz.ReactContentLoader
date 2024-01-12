@@ -210,7 +210,7 @@ let dependencies = [
 
     "Clean"
         ==> "InstallClient"
-        // ==> "UpdateTools"
+        ==> "UpdateTools"
         ==> "Build"
         ==> "PrepareRelease"
         ==> "Pack"

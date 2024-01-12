@@ -1,11 +1,10 @@
 source https://api.nuget.org/v3/index.json
-framework: net7.0
+framework: net8.0
 storage: none
 
 nuget Fable.Elmish.React
 nuget Fable.Elmish.Debugger
 nuget Feliz.Bulma
-nuget Feliz
 nuget Feliz.Router
 nuget Fake.Core.Target
 nuget Fake.DotNet.Cli
